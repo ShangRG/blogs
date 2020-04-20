@@ -1,0 +1,25 @@
+spring:
+  thymeleaf:
+    mode: HTML
+
+  profiles:
+    active: dev  #现在指定用  开发环境
+
+#----------------------------------因为这个是全局配置 下面这些配置我想在不同的环境用不同的配置所以
+#-------------------------------不应该配置到这里
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8
+#    username: root
+#    password: 13132037053
+#  jpa:
+#    hibernate:
+#      ddl-auto: update   #每次启动都会去检查字段映射是否一致
+#    show-sql: true  #在控制台输出sql语句 默认为false
+#
+#logging:
+#  level:
+#    root: info  #全局日志级别为info
+#    com.lrm: debug   #自定义包为 debug
+#  file: lgo/blog.log   #指定日志文件生成位置
+

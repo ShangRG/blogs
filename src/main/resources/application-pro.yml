@@ -1,0 +1,22 @@
+#生产环境
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 13132037053
+  jpa:
+    hibernate:
+      ddl-auto: none   #实际生产时不需要实体类变动换位none
+    show-sql: true
+
+logging:
+  level:
+    root: warn
+    com.lrm: info
+  file: lgo/blog-pro.log
+
+
+server:
+  port: 8081
