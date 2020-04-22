@@ -20,9 +20,6 @@ public class IndexController {
 ////        int i=9/0;
 //        return "index";
 //    }
-
-
-
     @GetMapping("/")
     public String index(){
 //        String blog= null;
