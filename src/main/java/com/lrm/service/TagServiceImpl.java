@@ -68,10 +68,11 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> listTag(String ids) {
-        return tagRepository.findAll(convertToList(ids));
+
+        return tagRepository.findAll(convertToList(ids)); //findAll这个find可以循环查询，知道你传递ids最后一个查完
     }
 
-    private List<Long> convertToList(String ids) {  //id=“1，2，3”  切割字符串
+    private List<Long> convertToList(String ids) {  //id=“1，2，3”  切割字符串   1  2   3
         List<Long> list = new ArrayList<>();
         if (!"".equals(ids) && ids != null) {
             String[] idarray = ids.split(",");

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by limi on 2017/10/15.
@@ -60,12 +62,10 @@ public class BlogController {
         return "admin/blogs-input";
     }
 
-    private void setTypeAndTag(Model model) {
-        model.addAttribute("types", typeService.listType());
-        model.addAttribute("tags", tagService.listTag());
-    }
 
-    @PostMapping("/blogs")
+
+
+    @PostMapping("/blogs")     //新增和修改将共用这一个方法
     public String post(Blog blog,RedirectAttributes attributes, HttpSession session){
         blog.setUser((User) session.getAttribute("user"));
         blog.setType(typeService.getType(blog.getType().getId()));
@@ -76,6 +76,26 @@ public class BlogController {
         }else {
             attributes.addFlashAttribute("message", "操作成功");
         }
+        return "redirect:/admin/blogs";
+    }
+
+
+    @GetMapping("/blogs/{id}/input")
+    public String editInput(Model model,@PathVariable Long id){
+        model.addAttribute("tags",tagService.listTag());
+        model.addAttribute("types", typeService.listType());
+        Blog blog = blogService.getBlog(id);
+        blog.init();  //将查询道的blog对象里的ids  处理成  1，2，3  为了在前端页面显示
+        model.addAttribute("blog", blog);
+        return "/admin/blogs-input";
+
+    }
+
+    //@{/admin/blogs/{id}/delete(id=${blog.id})
+    @GetMapping("/blogs/{id}/delete")
+    public String delete(@PathVariable Long id,RedirectAttributes attributes){
+        blogService.deleteBlog(id);
+        attributes.addFlashAttribute("message", "删除成功");
         return "redirect:/admin/blogs";
     }
 
