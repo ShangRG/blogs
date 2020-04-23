@@ -65,4 +65,8 @@ public interface TagService {
 
 
     List<Tag> listTag(String ids);
+
+
+
+    int saveTag(String name);
 }

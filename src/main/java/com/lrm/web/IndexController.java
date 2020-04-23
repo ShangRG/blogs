@@ -1,32 +1,45 @@
 package com.lrm.web;
 
-import com.lrm.NotFoundExceptin;
+import com.lrm.service.BlogService;
+import com.lrm.service.TagService;
+import com.lrm.service.TypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Created by limi on 2017/10/13.
+ */
 @Controller
 public class IndexController {
-/**
- * 测试传参以后，进行aop操作 记录日志，
- * 第二个测试则是证明能否跳转到自定义controller拦截
- */
-//    @GetMapping("/{id}/{name}")
-//    public String index(@PathVariable Integer id,@PathVariable  String name){
-////        String blog= null;
-////        if(blog==null){
-////            throw  new NotFoundExceptin("博客找不到");
-////        }
-////        int i=9/0;
-//        return "index";
-//    }
+
+    @Autowired
+    private BlogService blogService;
+
+    @Autowired
+    private TypeService typeService;
+
+    @Autowired
+    private TagService tagService;
+
     @GetMapping("/")
-    public String index(){
-//        String blog= null;
-//        if(blog==null){
-//            throw  new NotFoundExceptin("博客找不到");
-//        }
-//        int i=9/0;
+    public String index(@PageableDefault(size = 8, sort = {"updateTime"}, direction = Sort.Direction.DESC) Pageable pageable,
+                        Model model) {
+        model.addAttribute("page",blogService.listBlog(pageable));
+        //显示标签，也是分页查询实现过程在serviceimpl
+        model.addAttribute("types", typeService.listTypeTop(6));
+        model.addAttribute("tags", tagService.listTagTop(10));
+        model.addAttribute("recommendBlogs", blogService.listRecommendBlogTop(8));
         return "index";
     }
+
+
+
 }

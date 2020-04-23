@@ -5,10 +5,13 @@ import com.lrm.dao.BlogRepository;
 import com.lrm.po.Blog;
 import com.lrm.po.BlogQuery;
 import com.lrm.po.Type;
+import com.lrm.util.MyBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +61,11 @@ public class BlogServiceImpl implements BlogService {
         },pageable);
     }
 
+    @Override
+    public Page<Blog> listBlog(Pageable pageable) {
+        return blogRepository.findAll(pageable);
+    }
+
     @Transactional
     @Override
     public Blog saveBlog(Blog blog) {
@@ -77,9 +85,10 @@ public class BlogServiceImpl implements BlogService {
     public Blog updateBlog(Long id, Blog blog) {
         Blog b = blogRepository.findOne(id);
         if (b == null) {
-            throw new NotFoundExceptin("该博客不存在.........");
+            throw new NotFoundExceptin("博客不存在");
         }
-        BeanUtils.copyProperties(b,blog);
+        BeanUtils.copyProperties(blog,b, MyBeanUtils.getNullPropertyNames(blog));
+        b.setUpdateTime(new Date());
         return blogRepository.save(b);
     }
 
@@ -87,5 +96,12 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void deleteBlog(Long id) {
         blogRepository.delete(id);
+    }
+
+    @Override
+    public List<Blog> listRecommendBlogTop(Integer size) {
+        Sort sort = new Sort(Sort.Direction.DESC,"updateTime");
+        Pageable pageable = new PageRequest(0, size, sort);
+        return blogRepository.findTop(pageable);
     }
 }

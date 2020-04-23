@@ -5,7 +5,9 @@ import com.lrm.dao.TypeRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.lrm.po.Type;
@@ -62,7 +64,10 @@ public class TypeServiceImpl implements TypeService {
     @Transactional
     @Override
     public List<Type> listTypeTop(Integer size) {
-        return null;
+        //构建分页pageable对象  进行分页
+        Sort sort = new Sort(Sort.Direction.DESC,"blogs.size"); //按照 blogs.size 倒叙排序
+        Pageable pageable = new PageRequest(0,size,sort);
+        return typeRepository.findTop(pageable);
     }
 
     @Transactional

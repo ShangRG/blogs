@@ -16,4 +16,7 @@ import java.util.List;
  */
 public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificationExecutor<Blog> {
 
+
+    @Query("select b from Blog b where b.recommend = true")
+    List<Blog> findTop(Pageable pageable);
 }

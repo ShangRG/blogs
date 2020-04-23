@@ -6,8 +6,11 @@ import com.lrm.po.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +49,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> listTagTop(Integer size) {
-        return null;
+        Sort sort = new Sort(Sort.Direction.DESC, "blogs.size");
+        Pageable pageable = new PageRequest(0, size, sort);
+        return tagRepository.findTop(pageable);
     }
 
     @Override
@@ -57,6 +62,7 @@ public class TagServiceImpl implements TagService {
         }
         BeanUtils.copyProperties(type,one);
         return tagRepository.save(one);
+
     }
 
     @Override
@@ -70,6 +76,12 @@ public class TagServiceImpl implements TagService {
     public List<Tag> listTag(String ids) {
 
         return tagRepository.findAll(convertToList(ids)); //findAll这个find可以循环查询，知道你传递ids最后一个查完
+    }
+
+    @Override
+    @Transactional
+    public int saveTag(String name) {
+        return tagRepository.addTag(name);
     }
 
     private List<Long> convertToList(String ids) {  //id=“1，2，3”  切割字符串   1  2   3

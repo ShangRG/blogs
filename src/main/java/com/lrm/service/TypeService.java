@@ -43,7 +43,7 @@ public interface TypeService {
     List<Type> listType();
 
     /**
-     *
+     *也就是一个分页查询，传size是每页显示几条，分页过程在 impl里
      * @param size
      * @return
      */
