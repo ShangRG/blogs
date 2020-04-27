@@ -21,6 +21,9 @@ public interface BlogService {
 
     Page<Blog> listBlog(Pageable pageable);
 
+    //根据名字模糊查询并分页
+    Page<Blog> listBlog(String query,Pageable pageable);
+
 
     Blog saveBlog(Blog blog);
 
@@ -29,4 +32,6 @@ public interface BlogService {
     void deleteBlog(Long id);
 
     List<Blog> listRecommendBlogTop(Integer size);
+
+
 }
