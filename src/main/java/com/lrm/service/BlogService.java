@@ -16,6 +16,8 @@ public interface BlogService {
 
     Blog getBlog(Long id);
 
+    //按照id获取博客，并将blog.comment由MAKERDOWN转换为html格式
+    Blog getAndConvert(Long id);
 
     Page<Blog> listBlog(Pageable pageable, BlogQuery blog);
 

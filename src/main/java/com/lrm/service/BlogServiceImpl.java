@@ -5,6 +5,7 @@ import com.lrm.dao.BlogRepository;
 import com.lrm.po.Blog;
 import com.lrm.po.BlogQuery;
 import com.lrm.po.Type;
+import com.lrm.util.MarkdownUtils;
 import com.lrm.util.MyBeanUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,15 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public Blog getBlog(Long id) {
         return blogRepository.findOne(id);
+    }
+
+    @Override
+    public Blog getAndConvert(Long id) {
+        Blog b=new Blog();
+        b=blogRepository.findOne(id);
+        String s = MarkdownUtils.markdownToHtml(b.getContent());
+        b.setContent(s);
+        return b;
     }
 
 
