@@ -23,13 +23,13 @@ public class Comment {
     private Date createTime;
 
     @ManyToOne
-    private Blog blog;
+    private Blog blog;   //会建立一个blog_id外键  证明这个评论属于那篇博客。。  并且在添加Comment类时  这里需要set设置。。而且我们也可以get取值
 
-    @OneToMany(mappedBy = "parentComment")
+    @OneToMany(mappedBy = "parentComment")   //子集评论内容
     private List<Comment> replyComments = new ArrayList<>();
 
     @ManyToOne
-    private Comment parentComment;
+    private Comment parentComment;   //父集评论内容
 
     private boolean adminComment;
 

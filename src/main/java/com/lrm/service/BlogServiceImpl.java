@@ -34,12 +34,19 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.findOne(id);
     }
 
+
+    @Transactional
     @Override
     public Blog getAndConvert(Long id) {
-        Blog b=new Blog();
-        b=blogRepository.findOne(id);
-        String s = MarkdownUtils.markdownToHtml(b.getContent());
-        b.setContent(s);
+        Blog blog = blogRepository.findOne(id);
+        if (blog == null) {
+            throw new NotFoundExceptin("该博客不存在");
+        }
+        Blog b = new Blog();
+        BeanUtils.copyProperties(blog,b);
+        String content = b.getContent();
+        b.setContent(MarkdownUtils.markdownToHtmlExtensions(content));
+        blogRepository.updateViews(id);
         return b;
     }
 
