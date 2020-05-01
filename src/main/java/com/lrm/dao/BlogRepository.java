@@ -28,4 +28,12 @@ public interface BlogRepository extends JpaRepository<Blog, Long>, JpaSpecificat
     int updateViews(Long id);
 
 
+    //这个相当于 select  updateTime from Blog group by updateTime group by updateTime
+    @Query("select function('date_format',b.updateTime,'%Y') as year from Blog b group by function('date_format',b.updateTime,'%Y') order by year desc ")
+    List<String> findGroupYear();
+
+    //相当于 select * from blog where updateTime=?
+    @Query("select b from Blog b where function('date_format',b.updateTime,'%Y') = ?1")
+    List<Blog> findByYear(String year);
+
 }

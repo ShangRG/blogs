@@ -88,6 +88,43 @@ public class BlogServiceImpl implements BlogService {
         return blogRepository.findByLike(query,pageable);
     }
 
+    /**
+     * 多对多的查询 。  关联表查询
+     * @param tagId
+     * @param pageable
+     * @return
+     */
+    @Override
+    public Page<Blog> listBlog(Long tagId, Pageable pageable) {
+        return blogRepository.findAll(new Specification<Blog>() {
+            @Override
+            public Predicate toPredicate(Root<Blog> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+                    //为什么要写tags  使用为Blog类里有tags    private List<Tag> tags = new ArrayList<>();
+                Join join = root.join("tags");  // 建立关联。当前Blog表与Tag表关联
+                return cb.equal(join.get("id"),tagId);  //blog.id = tag.id
+            }
+
+        },pageable);
+
+    }
+
+    /**
+     * 博客归档方法  按照年份进行归档博客
+     * @return
+     */
+    @Override
+    public Map<String, List<Blog>> archiveBlog() {
+        //查询年份
+        List<String> groupYears = blogRepository.findGroupYear();
+        Map<String,List<Blog>> maps =new HashMap<>();
+        //往map里放博客归档信息   key是年份   value是属于这个年份的博客list
+        for(String groupYear:groupYears){
+
+            maps.put(groupYear,blogRepository.findByYear(groupYear));
+        }
+        return maps;
+    }
+
     @Transactional
     @Override
     public Blog saveBlog(Blog blog) {
@@ -125,5 +162,10 @@ public class BlogServiceImpl implements BlogService {
         Sort sort = new Sort(Sort.Direction.DESC,"updateTime");
         Pageable pageable = new PageRequest(0, size, sort);
         return blogRepository.findTop(pageable);
+    }
+
+    @Override
+    public Long countBlog() {
+        return blogRepository.count();
     }
 }

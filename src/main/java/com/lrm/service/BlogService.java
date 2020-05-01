@@ -27,6 +27,12 @@ public interface BlogService {
     Page<Blog> listBlog(String query,Pageable pageable);
 
 
+    Page<Blog> listBlog(Long tagId, Pageable pageable);
+
+    //博客归档
+    Map<String,List<Blog>> archiveBlog();
+
+
     Blog saveBlog(Blog blog);
 
     Blog updateBlog(Long id, Blog blog);
@@ -36,4 +42,5 @@ public interface BlogService {
     List<Blog> listRecommendBlogTop(Integer size);
 
 
+    Long countBlog();
 }
